@@ -1,0 +1,33 @@
+.footer {
+    width: 100%;
+    border-top: 1px solid var(--border-color, #e5e7eb);
+    background-color: var(--bg-subtle, #f9fafb);
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    margin-top: auto;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.brand {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-primary, #111827);
+}
+
+.disclaimer {
+    font-size: 0.8125rem;
+    color: var(--text-muted, #6b7280);
+    line-height: 1.5;
+}
+
+.copyright {
+    font-size: 0.875rem;
+    color: var(--text-secondary, #4b5563);
+    border-top: 1px solid var(--border-color, #e5e7eb);
+    padding-top: 1.5rem;
+}

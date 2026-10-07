@@ -1,0 +1,51 @@
+.layout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6, 2rem);
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2, 0.5rem);
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary, #111827);
+    letter-spacing: -0.02em;
+}
+
+.description {
+    font-size: 1.125rem;
+    color: var(--text-muted, #6b7280);
+}
+
+.interactiveGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-5, 1.5rem);
+}
+
+@media (min-width: 768px) {
+    .interactiveGrid {
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+    }
+}
+
+.contentSection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4, 1rem);
+    margin-top: var(--space-4, 1rem);
+    border-top: 1px solid var(--border-color, #e5e7eb);
+    padding-top: var(--space-6, 2rem);
+}
+
+.sectionTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary, #111827);
+}

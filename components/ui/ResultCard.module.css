@@ -1,0 +1,39 @@
+.card {
+    background-color: var(--bg-subtle, #f8fafc);
+    border: 1px solid var(--border-color, #e5e7eb);
+    border-radius: var(--radius-md, 0.5rem);
+    padding: var(--space-4, 1rem);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1, 0.25rem);
+}
+
+.highlighted {
+    background-color: rgba(37, 99, 235, 0.04);
+    border-color: var(--brand-primary, #2563eb);
+}
+
+.label {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted, #6b7280);
+}
+
+.value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary, #111827);
+    line-height: 1.2;
+}
+
+.highlighted .value {
+    color: var(--brand-primary, #2563eb);
+}
+
+.subtext {
+    font-size: 0.75rem;
+    color: var(--text-secondary, #4b5563);
+    margin-top: 0.125rem;
+}
