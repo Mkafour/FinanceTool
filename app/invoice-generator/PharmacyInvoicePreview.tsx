@@ -3,7 +3,11 @@
 import { InvoiceData } from '@/lib/invoice/types';
 import { calculatePharmacyLineTotal, calculatePharmacyNetTotal } from '@/lib/invoice/pharmacy-calculations';
 import { formatNumber } from '@/lib/formatting';
-import { GLOBE_PHARMACY_INFO, GLOBE_PHARMACY_TERMS } from '@/lib/invoice/globe-pharmacy-constants';
+import {
+    GLOBE_PHARMACY_INFO,
+    GLOBE_PHARMACY_TERMS,
+    GLOBE_PHARMACY_LOGO_PATH,
+} from '@/lib/invoice/globe-pharmacy-constants';
 import styles from './PharmacyInvoicePreview.module.css';
 
 interface PharmacyInvoicePreviewProps {
@@ -17,21 +21,22 @@ export default function PharmacyInvoicePreview({ data }: PharmacyInvoicePreviewP
         <div className={styles.invoice}>
             {/* FIXED HEADER — not user-editable */}
             <div className={styles.header}>
-                {data.logoDataUrl && <img src={data.logoDataUrl} alt="Logo" className={styles.logo} />}
-                <div className={styles.companyName}>{GLOBE_PHARMACY_INFO.name}</div>
-                <div className={styles.companySubtitle}>{GLOBE_PHARMACY_INFO.subtitle}</div>
-                <div className={styles.companyDetails}>
-                    {GLOBE_PHARMACY_INFO.address.split('\n').map((line, i) => (
-                        <span key={i}>{line}<br /></span>
-                    ))}
-                    {GLOBE_PHARMACY_INFO.phone}<br />
-                    {GLOBE_PHARMACY_INFO.email}
+                <img src={GLOBE_PHARMACY_LOGO_PATH} alt="Globe Pharmacy logo" className={styles.logo} />
+                <div className={styles.headerText}>
+                    <div className={styles.companyName}>{GLOBE_PHARMACY_INFO.name}</div>
+                    <div className={styles.companySubtitle}>{GLOBE_PHARMACY_INFO.subtitle}</div>
+                    <div className={styles.companyDetails}>
+                        {GLOBE_PHARMACY_INFO.address.split('\n').map((line, i) => (
+                            <span key={i}>{line}<br /></span>
+                        ))}
+                        {GLOBE_PHARMACY_INFO.phone}<br />
+                        {GLOBE_PHARMACY_INFO.email}
+                    </div>
                 </div>
             </div>
 
             <div className={styles.invoiceTitle}>Sales Invoice</div>
 
-            {/* EDITABLE: customer + invoice meta */}
             <div className={styles.information}>
                 <div className={styles.infoCol}>
                     <div className={styles.infoLabel}>Customer Name</div>
@@ -51,7 +56,6 @@ export default function PharmacyInvoicePreview({ data }: PharmacyInvoicePreviewP
                 </div>
             </div>
 
-            {/* EDITABLE: line items */}
             <div className={styles.tableWrapper}>
                 <table className={styles.itemsTable}>
                     <thead>
@@ -98,7 +102,6 @@ export default function PharmacyInvoicePreview({ data }: PharmacyInvoicePreviewP
                 </div>
             </div>
 
-            {/* FIXED terms + signature labels — not user-editable */}
             <div className={styles.bottomSection}>
                 <div className={styles.terms}>
                     <ol>
@@ -124,7 +127,6 @@ export default function PharmacyInvoicePreview({ data }: PharmacyInvoicePreviewP
                         <div className={styles.dateLine} />
                     </div>
 
-                    {/* EDITABLE: payment details */}
                     {(data.paybill || data.accountNumber) && (
                         <div className={styles.payment}>
                             {data.paybill && <><strong>Lipa Na M-Pesa Pay Bill No:</strong> {data.paybill}<br /></>}

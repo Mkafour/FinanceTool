@@ -1,3 +1,6 @@
+export const GLOBE_PHARMACY_LOGO_PATH = '/logo.png';
+
+
 export const GLOBE_PHARMACY_INFO = {
     name: 'GLOBE PHARMACY LTD.',
     subtitle: 'Pharmaceutical Importers and Distributors',

@@ -2,7 +2,6 @@
 
 import { InvoiceData, LineItem } from '@/lib/invoice/types';
 import { TextInput } from '@/components/ui/TextInput';
-import { FileUpload } from '@/components/ui/FileUpload';
 
 interface PharmacyInvoiceFormProps {
     data: InvoiceData;
@@ -42,16 +41,6 @@ export default function PharmacyInvoiceForm({ data, onChange }: PharmacyInvoiceF
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            <section style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <h3>Logo</h3>
-                <FileUpload
-                    label="Business Logo"
-                    currentValue={data.logoDataUrl}
-                    onFileRead={(dataUrl) => update({ logoDataUrl: dataUrl })}
-                    onClear={() => update({ logoDataUrl: null })}
-                />
-            </section>
-
             <section style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <h3>Customer</h3>
                 <TextInput label="Customer Name" value={data.clientName} onChange={(v) => update({ clientName: v })} />

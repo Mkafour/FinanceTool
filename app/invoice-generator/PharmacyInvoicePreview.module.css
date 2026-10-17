@@ -9,16 +9,23 @@
 }
 
 .header {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
     position: relative;
+}
+
+.headerText {
+    text-align: center;
 }
 
 .logo {
     display: block;
-    margin: 0 auto 0.5rem;
-    max-width: 80px;
-    max-height: 80px;
+    width: 85px;
+    height: 85px;
     object-fit: contain;
+    flex-shrink: 0;
 }
 
 .companyName {
@@ -166,10 +173,22 @@
     line-height: 1.6;
 }
 
+/* Tablet: logo sits beside the header text */
 @media (min-width: 640px) {
     .invoice {
         padding: 2rem;
         font-size: 0.8125rem;
+    }
+
+    .header {
+        flex-direction: row;
+        justify-content: center;
+        gap: 1.25rem;
+    }
+
+    .logo {
+        width: 112px;
+        height: 112px;
     }
 
     .information {
@@ -180,7 +199,22 @@
         flex-direction: row;
     }
 
-    .terms, .signatures {
+    .terms,
+    .signatures {
         flex: 1;
+    }
+}
+
+/* Desktop: logo pinned so its right edge sits at 30% of the invoice width */
+@media (min-width: 1024px) {
+    .header {
+        min-height: 112px;
+    }
+
+    .logo {
+        position: absolute;
+        top: 0;
+        left: 30%;
+        transform: translateX(-100%);
     }
 }

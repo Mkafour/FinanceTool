@@ -2,39 +2,96 @@ import jsPDF from 'jspdf';
 import { InvoiceData } from './types';
 import { calculatePharmacyLineTotal, calculatePharmacyNetTotal } from './pharmacy-calculations';
 import { formatNumber } from '@/lib/formatting';
-import { GLOBE_PHARMACY_INFO, GLOBE_PHARMACY_TERMS } from './globe-pharmacy-constants';
+import {
+    GLOBE_PHARMACY_INFO,
+    GLOBE_PHARMACY_TERMS,
+    GLOBE_PHARMACY_LOGO_PATH,
+} from './globe-pharmacy-constants';
 
-export function generatePharmacyInvoicePdf(data: InvoiceData): void {
+interface LoadedImage {
+    dataUrl: string;
+    width: number;
+    height: number;
+}
+
+async function loadLogo(path: string): Promise<LoadedImage | null> {
+    try {
+        const response = await fetch(path);
+        if (!response.ok) return null;
+        const blob = await response.blob();
+
+        const dataUrl = await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+
+        const size = await new Promise<{ width: number; height: number }>((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+            img.onerror = reject;
+            img.src = dataUrl;
+        });
+
+        return { dataUrl, ...size };
+    } catch {
+        return null;
+    }
+}
+
+export async function generatePharmacyInvoicePdf(data: InvoiceData): Promise<void> {
     const doc = new jsPDF({ unit: 'pt', format: 'a4' });
     const pageWidth = doc.internal.pageSize.getWidth();
     const margin = 40;
     let y = margin;
 
-    // --- Fixed Header ---
-    if (data.logoDataUrl) {
+    // --- Measure header text so the logo never collides with it ---
+    doc.setFontSize(19);
+    doc.setFont('helvetica', 'bold');
+    const nameWidth = doc.getTextWidth(GLOBE_PHARMACY_INFO.name);
+    doc.setFontSize(8.5);
+    doc.setFont('helvetica', 'normal');
+    const phoneWidth = doc.getTextWidth(GLOBE_PHARMACY_INFO.phone);
+    const headerTextWidth = Math.max(nameWidth, phoneWidth);
+    const textLeft = pageWidth / 2 - headerTextWidth / 2;
+
+    // --- Fixed Logo: ~1/3 bigger, right edge at 30% of page width ---
+    const logo = await loadLogo(GLOBE_PHARMACY_LOGO_PATH);
+    if (logo) {
+        const box = 93;
+        const scale = Math.min(box / logo.width, box / logo.height);
+        const logoW = logo.width * scale;
+        const logoH = logo.height * scale;
+
+        const targetRight = pageWidth * 0.3;
+        const logoRight = Math.min(targetRight, textLeft - 12);
+        const logoX = Math.max(margin, logoRight - logoW);
+
         try {
-            doc.addImage(data.logoDataUrl, 'PNG', margin, y, 60, 60);
+            doc.addImage(logo.dataUrl, 'PNG', logoX, y, logoW, logoH);
         } catch {
-            // skip logo on failure
+            // skip logo if the image can't be embedded
         }
     }
 
-    doc.setFontSize(16);
+    // --- Fixed Header ---
+    doc.setFontSize(19);
     doc.setFont('helvetica', 'bold');
-    doc.text(GLOBE_PHARMACY_INFO.name, pageWidth / 2, y + 10, { align: 'center' });
+    doc.text(GLOBE_PHARMACY_INFO.name, pageWidth / 2, y + 12, { align: 'center' });
 
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
-    doc.text(GLOBE_PHARMACY_INFO.subtitle, pageWidth / 2, y + 26, { align: 'center' });
+    doc.text(GLOBE_PHARMACY_INFO.subtitle, pageWidth / 2, y + 28, { align: 'center' });
 
     doc.setFontSize(8.5);
     const addressLines = GLOBE_PHARMACY_INFO.address.split('\n');
-    doc.text(addressLines[0], pageWidth / 2, y + 40, { align: 'center' });
-    doc.text(addressLines[1] || '', pageWidth / 2, y + 52, { align: 'center' });
-    doc.text(GLOBE_PHARMACY_INFO.phone, pageWidth / 2, y + 64, { align: 'center' });
-    doc.text(GLOBE_PHARMACY_INFO.email, pageWidth / 2, y + 76, { align: 'center' });
+    doc.text(addressLines[0], pageWidth / 2, y + 42, { align: 'center' });
+    doc.text(addressLines[1] || '', pageWidth / 2, y + 54, { align: 'center' });
+    doc.text(GLOBE_PHARMACY_INFO.phone, pageWidth / 2, y + 66, { align: 'center' });
+    doc.text(GLOBE_PHARMACY_INFO.email, pageWidth / 2, y + 78, { align: 'center' });
 
-    y += 100;
+    y += 108;
 
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
